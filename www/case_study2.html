@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Case Study 2. Identifying Perturbations That Resemble a CDK4 Knockout Signature</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif; background: #f8fafc; color: #1e293b; line-height: 1.75; }
+  .container { max-width: 900px; margin: 0 auto; padding: 32px 20px 50px; }
+  h1 { font-size: 22px; color: #0f172a; letter-spacing: -0.3px; margin-bottom: 4px; line-height: 1.3; }
+  .subtitle { color: #64748b; font-size: 13px; margin-bottom: 20px; }
+  .section { margin: 28px 0; }
+  .section-title { font-size: 17px; color: #0891b2; border-bottom: 2px solid #e2e8f0; padding-bottom: 7px; margin-bottom: 12px; }
+  .card { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 18px 22px; margin: 14px 0; }
+  .card-teal { border-left: 4px solid #0891b2; }
+  .card-green { border-left: 4px solid #22c55e; }
+  .card-amber { border-left: 4px solid #f59e0b; }
+  ul, ol { padding-left: 20px; margin: 4px 0; }
+  li { margin: 3px 0; font-size: 14px; }
+  table { width: 100%; border-collapse: collapse; margin: 10px 0; font-size: 13px; }
+  th { background: #f1f5f9; color: #334155; padding: 7px 10px; text-align: left; font-weight: 600; border-bottom: 2px solid #e2e8f0; font-size: 12px; }
+  td { padding: 7px 10px; border-bottom: 1px solid #f1f5f9; }
+  .badge { display: inline-block; padding: 2px 8px; border-radius: 8px; font-size: 10px; font-weight: 600; margin-right: 3px; }
+  .b-browse { background: #dbeafe; color: #1e40af; }
+  .b-onegene { background: #dcfce7; color: #166534; }
+  .b-synergy { background: #fef3c7; color: #92400e; }
+  .b-gpsa { background: #ede9fe; color: #6d28d9; }
+  .step { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px 22px; margin: 12px 0; }
+  .step-head { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+  .step-num { background: #0891b2; color: #fff; width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; flex-shrink: 0; }
+  .step h3 { font-size: 14px; }
+  .action { background: #ecfeff; border-left: 3px solid #0891b2; padding: 8px 12px; border-radius: 0 5px 5px 0; margin: 6px 0; font-size: 13px; }
+  .action code { background: #cffafe; padding: 1px 5px; border-radius: 3px; font-size: 12px; color: #0e7490; }
+  .result { background: #f0fdf4; border-left: 3px solid #22c55e; padding: 8px 12px; border-radius: 0 5px 5px 0; margin: 6px 0; font-size: 13px; }
+  .result::before { content: "Result: "; font-weight: 700; color: #166534; }
+  .insight { background: #fffbeb; border: 1px solid #fde68a; border-radius: 6px; padding: 10px 14px; margin: 10px 0; font-size: 13px; }
+  .insight::before { content: "> "; font-weight: 700; color: #92400e; }
+  .data-row { display: flex; gap: 12px; flex-wrap: wrap; margin: 8px 0; }
+  .data-cell { flex: 1; min-width: 100px; background: #f8fafc; border-radius: 6px; padding: 10px; text-align: center; border: 1px solid #e2e8f0; }
+  .data-cell .val { font-size: 22px; font-weight: 700; color: #0891b2; }
+  .data-cell .lbl { font-size: 10px; color: #94a3b8; margin-top: 2px; text-transform: uppercase; }
+  .footnote { font-size: 11px; color: #94a3b8; text-align: center; margin-top: 32px; padding-top: 16px; border-top: 1px solid #e2e8f0; }
+  .flow { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 14px; margin: 12px 0; text-align: center; font-size: 13px; }
+  .contrast-table td:first-child { font-weight: 600; }
+  .up { color: #16a34a; font-weight: 600; }
+  .down { color: #dc2626; font-weight: 600; }
+  .neutral { color: #94a3b8; }
+</style>
+</head>
+<body>
+<div class="container">
+
+<h1>Case Study 2. Identifying Chemical Perturbations That Resemble a CDK4 Knockout Signature</h1>
+
+<h2>Biological question</h2>
+
+<p>After characterizing the transcriptional consequences of a genetic perturbation, researchers often want to know whether chemical compounds can induce similar molecular states. Such compounds may phenocopy selected downstream effects of the genetic perturbation, modulate related pathways or provide clues for mechanism-of-action analysis.</p>
+
+<p>Using the CDK4 knockout signature in MCF-7 cells from Case Study 1 as an example, this case study asks:</p>
+
+<p>Which chemical perturbations produce transcriptional effects similar to CDK4 knockout, especially with respect to E2F- and proliferation-associated transcriptional programs?</p>
+
+<p>This example illustrates how Gene Set Query, Gene Query, Perturb Query and Browse can be used together to prioritize and cross-check candidate chemical perturbations.</p>
+
+<h2>Step 1. Identify chemical perturbations that suppress the E2F Targets pathway</h2>
+
+<p>In Case Study 1, CDK4 knockout in MCF-7 cells showed strong suppression of the E2F Targets gene set. Therefore, we first used the Gene Set Query module to search for chemical perturbations that inhibit the same pathway.</p>
+
+<p>Users open the Gene Set Query module, select Hallmark as the pathway database, choose E2F Targets as the query gene set, set the regulatory direction to Suppress, select Chemical as the perturbation type and click Run.</p>
+
+<div style="margin-top: 12px; text-align: center;">
+  <a href="case2-1.png" target="_blank">
+    <img src="case2-1.png" alt="Click to view full-size image" style="max-width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; cursor: pointer; box-shadow: 0 1px 2px rgba(0,0,0,0.05);">
+  </a>
+</div>
+
+<p>PerturbSigDB returns perturbation signatures ranked according to their suppressive effects on the selected pathway. Among the top results, several signatures correspond to palbociclib, an FDA-approved CDK4/6 inhibitor. This provides a positive-control-like result, because palbociclib is expected to affect CDK4/6-related cell-cycle transcriptional programs.</p>
+
+<p>In this example, the top-ranked palbociclib signature PSC819792 was selected for further inspection.</p>
+
+<div style="margin-top: 12px; text-align: center;">
+  <a href="case2-2.png" target="_blank">
+    <img src="case2-2.png" alt="Click to view full-size image" style="max-width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; cursor: pointer; box-shadow: 0 1px 2px rgba(0,0,0,0.05);">
+  </a>
+</div>
+
+<p>Users can scroll down to the Explore Selected Dataset section, enter PSC819792, and select the E2F Targets pathway from the Hallmark collection. PerturbSigDB then generates pathway enrichment results for the selected perturbation signature, including Hallmark enrichment, KEGG enrichment and GSEA visualization for the E2F Targets pathway.</p>
+
+<p>The enrichment results show that the top perturbed pathways of PSC819792 are highly consistent with those observed in the CDK4 knockout signature PSG55550. In particular, the leading suppressed pathways largely overlap between palbociclib treatment and CDK4 knockout.</p>
+
+<div style="margin-top: 12px; text-align: center;">
+  <a href="case2-3.png" target="_blank">
+    <img src="case2-3.png" alt="Click to view full-size image" style="max-width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; cursor: pointer; box-shadow: 0 1px 2px rgba(0,0,0,0.05);">
+  </a>
+</div>
+
+<p>The enrichment scores of the E2F Targets pathway are also highly similar between palbociclib treatment and CDK4 knockout, with values of approximately −4.108 and −3.716, respectively. These results suggest that PSC819792 produces a pathway-level transcriptional response resembling that of the CDK4 knockout signature.</p>
+
+<div style="margin-top: 12px; text-align: center;">
+  <a href="case2-4.png" target="_blank">
+    <img src="case2-4.png" alt="Click to view full-size image" style="max-width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; cursor: pointer; box-shadow: 0 1px 2px rgba(0,0,0,0.05);">
+  </a>
+</div>
+
+<p>Because palbociclib is a known CDK4/6 inhibitor, this result mainly serves as a positive control demonstrating that PerturbSigDB can recover a biologically expected chemical perturbation.</p>
+
+<p>To further examine whether PerturbSigDB can identify additional compounds with CDK4-knockout-like transcriptional effects, we next inspected amsacrine, the top-ranked non-CDK4/6 inhibitor in the Gene Set Query results.</p>
+
+<p>In this analysis, the amsacrine signature PSC634846 was selected for further exploration.</p>
+
+<div style="margin-top: 12px; text-align: center;">
+  <a href="case2-5.png" target="_blank">
+    <img src="case2-5.png" alt="Click to view full-size image" style="max-width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; cursor: pointer; box-shadow: 0 1px 2px rgba(0,0,0,0.05);">
+  </a>
+</div>
+
+<p>Using the same pathway enrichment workflow, users can analyze PSC634846 in the Explore Selected Dataset section. The top Hallmark pathways perturbed by PSC634846 show strong overlap with those observed after CDK4 knockout. Several of the highest-ranked suppressed pathways are shared between the two signatures.</p>
+
+<div style="margin-top: 12px; text-align: center;">
+  <a href="case2-6.png" target="_blank">
+    <img src="case2-6.png" alt="Click to view full-size image" style="max-width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; cursor: pointer; box-shadow: 0 1px 2px rgba(0,0,0,0.05);">
+  </a>
+</div>
+
+<p>The E2F Targets enrichment scores are also comparable between PSC634846 and CDK4 knockout, with values of approximately −4.241 and −3.716, respectively. These results suggest that PSC634846 induces a pathway-level transcriptional response similar to that of the CDK4 knockout signature.</p>
+
+<div style="margin-top: 12px; text-align: center;">
+  <a href="case2-7.png" target="_blank">
+    <img src="case2-7.png" alt="Click to view full-size image" style="max-width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; cursor: pointer; box-shadow: 0 1px 2px rgba(0,0,0,0.05);">
+  </a>
+</div>
+
+<h2>Step 2. Cross-check downstream gene suppression using Gene Query</h2>
+
+<p>Pathway-level similarity can be further evaluated at the gene level. In Case Study 1, PCNA was used as a representative downstream readout of the E2F-associated proliferative transcriptional program and was strongly down-regulated after CDK4 knockout.</p>
+
+<p>Therefore, PCNA provides a useful gene-level marker for cross-checking candidate chemical perturbations.</p>
+
+<p>Users open the Gene Query module, enter PCNA, set the |logFC| cutoff to 2, select Chemical as the perturbation type and search for candidate signatures including PSC819792 and PSC634846.</p>
+
+<div style="margin-top: 12px; text-align: center;">
+  <a href="case2-8.png" target="_blank">
+    <img src="case2-8.png" alt="Click to view full-size image" style="max-width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; cursor: pointer; box-shadow: 0 1px 2px rgba(0,0,0,0.05);">
+  </a>
+</div>
+
+<p>Both signatures show marked down-regulation of PCNA. The logFC values of PCNA are approximately −9.880 in PSC819792 and −9.314 in PSC634846. This result is consistent with the CDK4 knockout signature and supports the similarity between these chemical perturbations and CDK4 loss at the gene-expression level.</p>
+
+<p>This step illustrates how users can move from pathway-level candidate selection to gene-level validation within the same database.</p>
+
+<h2>Step 3. Use Perturb Query to identify globally similar perturbation signatures</h2>
+
+<p>Gene Set Query is useful when users are interested in a specific pathway or gene set. However, when a complete perturbation signature is available, users can use the Perturb Query module to compare the full expression profile against curated perturbation signatures in PerturbSigDB.</p>
+
+<div style="margin-top: 12px; text-align: center;">
+  <a href="case2-9.png" target="_blank">
+    <img src="case2-9.png" alt="Click to view full-size image" style="max-width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; cursor: pointer; box-shadow: 0 1px 2px rgba(0,0,0,0.05);">
+  </a>
+</div>
+
+<p>Here, we downloaded the CDK4 knockout signature PSG55550 from the Browse module and uploaded it to Perturb Query as a gene-logFC table. After clicking Run, PerturbSigDB searched for perturbation signatures with similar or opposite global transcriptional effects.</p>
+
+<div style="margin-top: 12px; text-align: center;">
+  <a href="case2-10.png" target="_blank">
+    <img src="case2-10.png" alt="Click to view full-size image" style="max-width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; cursor: pointer; box-shadow: 0 1px 2px rgba(0,0,0,0.05);">
+  </a>
+</div>
+
+<p>The top-ranked similar signature was PSC634832, whose perturbagen is amsacrine. This result is consistent with the Gene Set Query analysis, which also identified amsacrine as a compound producing CDK4-knockout-like pathway-level effects.</p>
+
+<div style="margin-top: 12px; text-align: center;">
+  <a href="case2-11.png" target="_blank">
+    <img src="case2-11.png" alt="Click to view full-size image" style="max-width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; cursor: pointer; box-shadow: 0 1px 2px rgba(0,0,0,0.05);">
+  </a>
+</div>
+
+<p>To further inspect this result, users can search for PSC634832 in the Browse module and perform the same pathway enrichment and GSEA analyses. The top perturbed Hallmark pathways of PSC634832 show strong overlap with those of the CDK4 knockout signature. Several pathways ranked among the top results for PSC634832 also appear among the top enriched pathways in the CDK4 knockout signature.</p>
+
+<div style="margin-top: 12px; text-align: center;">
+  <a href="case2-12.png" target="_blank">
+    <img src="case2-12.png" alt="Click to view full-size image" style="max-width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; cursor: pointer; box-shadow: 0 1px 2px rgba(0,0,0,0.05);">
+  </a>
+</div>
+
+<p>The E2F Targets enrichment scores are also similar between PSC634832 and CDK4 knockout, with values of approximately −4.475 and −3.716, respectively. These results indicate that PSC634832 produces a transcriptional response comparable to that of CDK4 knockout.</p>
+
+<div style="margin-top: 12px; text-align: center;">
+  <a href="case2-13.png" target="_blank">
+    <img src="case2-13.png" alt="Click to view full-size image" style="max-width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; cursor: pointer; box-shadow: 0 1px 2px rgba(0,0,0,0.05);">
+  </a>
+</div>
+
+<p>We then used Gene Query to check whether PCNA was also down-regulated in PSC634832. PCNA showed a logFC of approximately −3.947, indicating notable down-regulation and further supporting the similarity between PSC634832 and the CDK4 knockout signature.</p>
+
+<h2>4. Interpreting differences between Gene Set Query and Perturb Query</h2>
+
+<p>Gene Set Query and Perturb Query may return different top-ranked signatures because they address different analytical questions.</p>
+
+<p>Gene Set Query evaluates whether a perturbation activates or suppresses a selected pathway or gene set. It is most suitable when users only have a pathway of interest, such as E2F Targets, or when they want to identify perturbations that regulate a predefined biological program.</p>
+
+<p>Perturb Query compares a complete gene-logFC signature with all perturbation signatures in the database. It considers the ranked expression pattern across many genes and is therefore more suitable when users have a full differential expression profile.</p>
+
+<p>In this case, Gene Set Query identified PSC634846 as a top amsacrine signature based on E2F Targets inhibition, whereas Perturb Query identified PSC634832 as the most globally similar signature to the CDK4 knockout profile. Both signatures were associated with amsacrine but differed in experimental conditions.</p>
+
+<p>Because PSC634832 was not generated in MCF-7 cells, direct comparison with the CDK4 knockout signature should be interpreted cautiously. We therefore further inspected the Perturb Query results and identified PSC634848, an amsacrine-treated signature generated in MCF-7 cells.</p>
+
+<div style="margin-top: 12px; text-align: center;">
+  <a href="case2-14.png" target="_blank">
+    <img src="case2-14.png" alt="Click to view full-size image" style="max-width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; cursor: pointer; box-shadow: 0 1px 2px rgba(0,0,0,0.05);">
+  </a>
+</div>
+
+<p>For MCF-7 cells, Gene Set Query retrieved PSC634846, whereas Perturb Query retrieved PSC634848. Both signatures used amsacrine as the perturbagen but differed in dosage or experimental setting. To compare their similarity to CDK4 knockout at the gene level, we examined PCNA downregulation using Gene Query.</p>
+
+<p>PCNA showed a logFC of approximately &#8722;4.061 in PSC634848 and &#8722;9.314 in PSC634846. Both values indicate marked PCNA suppression. In this comparison, the Perturb Query-derived MCF-7 signature showed a PCNA downregulation level closer to that observed after CDK4 knockout, whereas the Gene Set Query-derived signature showed stronger suppression of the E2F Targets pathway.</p>
+
+<div style="margin-top: 12px; text-align: center;">
+  <a href="case2-15.png" target="_blank">
+    <img src="case2-15.png" alt="Click to view full-size image" style="max-width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; cursor: pointer; box-shadow: 0 1px 2px rgba(0,0,0,0.05);">
+  </a>
+</div>
+
+<h2>Interpretation</h2>
+
+<p>This case demonstrates how PerturbSigDB supports reverse discovery from a genetic perturbation signature to candidate chemical perturbations. Starting from the CDK4 knockout profile, users can first search for pathway-level similarity using Gene Set Query, validate downstream gene responses using Gene Query and then perform full-signature comparison using Perturb Query.</p>
+
+<p>The recovery of palbociclib supports the biological relevance of the workflow, because palbociclib is a known CDK4/6 inhibitor and is expected to affect E2F- and cell-cycle-associated transcriptional programs. The identification of amsacrine signatures by both Gene Set Query and Perturb Query further illustrates how PerturbSigDB can nominate compounds that induce transcriptional states resembling selected features of a genetic perturbation.</p>
+
+<p>More generally, this workflow shows how PerturbSigDB connects genetic perturbation signatures with chemical perturbation profiles, enabling users to explore functional similarity between gene loss and compound treatment in a unified transcriptomic space.</p>
+
+<h2>Notes</h2>
+
+<p>The results should be interpreted as transcriptomic similarity evidence. Similarity between a chemical perturbation and a genetic perturbation does not prove a shared direct target, direct causal mechanism or therapeutic efficacy. In particular, the amsacrine results should be viewed as hypothesis-generating evidence that selected amsacrine signatures resemble aspects of the CDK4 knockout transcriptional response.</p>
+
+<p>Candidate chemical perturbations identified by PerturbSigDB should be further evaluated using drug-target annotations, pathway knowledge, literature evidence, biological context and experimental validation.</p>
+
+</body>
+</html>

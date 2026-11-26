@@ -1,0 +1,110 @@
+hr {
+    border-top: 1px solid #A9A9A9;
+}
+
+hr.new1 {
+    border-top: 1px dashed #A9A9A9;
+}
+
+h4, .h4 {
+    font-size: 1.5rem; /* 增加字体大小 */
+}
+
+h5, .h5 {
+    font-size: 1.375rem; /* 增加字体大小 */
+}
+
+h6, .h6 {
+    font-size: 1.25rem; /* 增加字体大小 */
+}
+
+.selectize-input {
+    border: 0.125rem solid #A9A9A9; /* 使用rem代替px */
+    font-size: 1.125rem; /* 增加字体大小 */
+    line-height: 1.125rem;
+}
+
+.selectize-dropdown {
+    font-size: 1rem; /* 增加字体大小 */
+    line-height: 1rem;
+}
+
+.mir .selectize-input {
+    border: 0.125rem solid #9edae5; /* 使用rem代替px */
+    font-size: 1.25rem; /* 增加字体大小 */
+    line-height: 1.25rem;
+}
+
+input[type=number] {
+    width: 100%;
+    height: 1.75rem; /* 使用rem代替px */
+    border: 0.125rem solid #A9A9A9; /* 使用rem代替px */
+    font-size: 1rem; /* 增加字体大小 */
+}
+
+.navbar-nav {
+    padding-left: 1.875rem; /* 使用rem代替px */
+    font-size: 1.5rem; /* 增加字体大小 */
+}
+
+.nav.nav-tabs {
+    background-color: #e7edf5;
+    font-size: 1.25rem; /* 增加字体大小 */
+}
+
+.nav.nav-tabs > .active {
+    font-size: 1.25rem; /* 增加字体大小 */
+}
+
+.nav.nav-pills {
+    background-color: #e7edf5;
+    font-size: 1.25rem; /* 增加字体大小 */
+}
+
+.nav.nav-pills > .active {
+    font-size: 1.25rem; /* 增加字体大小 */
+}
+
+.nav.nav-pills.nav-stacked {
+    background-color: #e7edf5;
+    font-size: 1.25rem; /* 增加字体大小 */
+}
+
+.nav.nav-pills.nav-stacked > .active {
+    font-size: 1.25rem; /* 增加字体大小 */
+}
+
+.btn {
+    background-color: white;
+    border: 0.0625rem solid gray; /* 使用rem代替px */
+    color: black;
+    padding: 0.25rem 0.25rem; /* 使用rem代替px */
+    cursor: pointer;
+    font-size: 0.75rem; /* 增加字体大小 */
+    border-radius: 0.125rem; /* 使用rem代替px */
+}
+
+
+.modal-footer .btn {
+  font-size: 14px;  /* 调整字体大小 */
+  padding: 5px 20px;  /* 调整内边距 */
+  background-color: #007bff;  /* 设置背景颜色 */
+  color: white;  /* 设置字体颜色 */
+  border-radius: 5px;  /* 设置圆角 */
+}
+
+
+.btn:hover {
+    background-color: #34A853;
+    border: 0.125rem solid #34A853; /* 使用rem代替px */
+}
+
+.carousel-image {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 100%;
+    max-height: 60vh; /* 使用视口高度的百分比 */
+    width: auto;
+    height: auto;
+}

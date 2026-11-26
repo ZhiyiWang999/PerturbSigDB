@@ -1,0 +1,19 @@
+# Runtime aliases reconstructed from data_manifest.csv by R/bootstrap_data.R
+/GSEA/
+/signature_by_gene_fst/
+/rdata_columns_csv/
+/*.rdata
+/*.gmt
+/*Demo.txt
+/.gemap_cache/
+/signature_index_qs/
+/*.qs
+/*.rds
+# Temporary/test output
+.Rhistory
+.RData
+.Rproj.user/
+*.log
+__pycache__/
+.DS_Store
+Thumbs.db

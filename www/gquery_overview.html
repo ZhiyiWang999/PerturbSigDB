@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gene Query Module Overview</title>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+    background: #f0f4f8;
+    color: #2c3e50;
+    padding: 30px;
+  }
+  .container { max-width: 1300px; margin: 0 auto; }
+  h1 {
+    text-align: center;
+    margin-bottom: 8px;
+    font-size: 28px;
+    color: #1a5276;
+  }
+  .subtitle {
+    text-align: center;
+    color: #7f8c8d;
+    margin-bottom: 30px;
+    font-size: 14px;
+  }
+  .diagram-box {
+    background: #fff;
+    border-radius: 16px;
+    padding: 30px 20px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    margin-bottom: 30px;
+    overflow-x: auto;
+  }
+  .mermaid { display: flex; justify-content: center; }
+  .legend {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px;
+    margin-top: 30px;
+  }
+  .legend-card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 18px 20px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+    border-left: 4px solid;
+  }
+  .legend-card h3 { font-size: 15px; margin-bottom: 6px; }
+  .legend-card p { font-size: 13px; color: #555; line-height: 1.6; }
+  .legend-card.input { border-left-color: #3498db; }
+  .legend-card.query { border-left-color: #9b59b6; }
+  .legend-card.data { border-left-color: #2ecc71; }
+  .legend-card.result { border-left-color: #e67e22; }
+  .legend-card.detail { border-left-color: #e74c3c; }
+  .legend-card.viz { border-left-color: #1abc9c; }
+  .stats-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    justify-content: center;
+    margin-bottom: 25px;
+  }
+  .stat-item {
+    background: linear-gradient(135deg, #3a7bd5, #2c5f8a);
+    color: #fff;
+    border-radius: 10px;
+    padding: 14px 22px;
+    text-align: center;
+    min-width: 120px;
+  }
+  .stat-item .num { font-size: 24px; font-weight: 700; }
+  .stat-item .label { font-size: 12px; opacity: 0.85; margin-top: 2px; }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <h1>Gene Query — Gene Perturbation Query</h1>
+  <p class="subtitle">Single-gene perturbation signature search &amp; interactive result exploration</p>
+
+  <!-- Stats Bar -->
+  <div class="stats-bar">
+    <div class="stat-item"><div class="num">10</div><div class="label">Data Sources</div></div>
+    <div class="stat-item"><div class="num">4+6</div><div class="label">Chemical + Genetic</div></div>
+    <div class="stat-item"><div class="num">56,448</div><div class="label">Queryable Genes</div></div>
+    <div class="stat-item"><div class="num">4</div><div class="label">Result Tables</div></div>
+    <div class="stat-item"><div class="num">7</div><div class="label">Detail Plots</div></div>
+  </div>
+
+  <!-- Mermaid Diagram -->
+  <div class="diagram-box">
+    <div class="mermaid">
+flowchart TB
+    subgraph INPUT["🎯 Step 1: User Input"]
+        direction LR
+        A1["Gene(s)<br/><i>e.g. TP53, EGFR</i>"]:::inputNode
+        A2["Perturbagen Type<br/><i>All / Chemical / Genetic</i>"]:::inputNode
+        A3["|logFC| Cutoff<br/><i>e.g. 0.5, 1.0</i>"]:::inputNode
+        A4["🔍 Search"]:::actionNode
+    end
+
+    A1 & A2 & A3 --> A4
+
+    subgraph ENGINE["⚙️ Step 2: Query Engine"]
+        direction TB
+        B1["query_onegene_by_gene_fst_one_source()"]:::engineNode
+        B2["Parallel search across<br/>all 10 data sources"]:::engineNode
+        B3["Read fst columnar files<br/>Extract gene effect columns"]:::engineNode
+        B4["Merge with metadata<br/>Filter by |logFC| cutoff<br/>Cap at 10,000 rows"]:::engineNode
+        B1 --> B2 --> B3 --> B4
+    end
+
+    A4 --> ENGINE
+
+    subgraph SOURCES["📦 Data Sources (10 datasets)"]
+        direction LR
+        subgraph CHEM["Chemical (4)"]
+            C1["CIGSData"]:::chemNode
+            C2["HerbData"]:::chemNode
+            C3["LINCS 2020<br/>Chemical"]:::chemNode
+            C4["LINCS L1000<br/>Chemical"]:::chemNode
+        end
+        subgraph GENET["Genetic (6)"]
+            G1["GuoziData"]:::geneNode
+            G2["PerturbAtlas"]:::geneNode
+            G3["LINCS 2020<br/>KD / KO"]:::geneNode
+            G4["LINCS L1000<br/>KD / KO"]:::geneNode
+        end
+    end
+
+    ENGINE --> CHEM
+    ENGINE --> GENET
+
+    subgraph SPLIT["📊 Step 3: Result Splitting"]
+        direction LR
+        D1["Suppressors<br/><i>effect &lt; 0</i><br/>⬇️ Down-regulators"]:::suppNode
+        D2["Activators<br/><i>effect &gt; 0</i><br/>⬆️ Up-regulators"]:::actNode
+    end
+
+    CHEM & GENET --> SPLIT
+
+    subgraph TABLES["📋 Step 4: Output Tables"]
+        direction LR
+        E1["Chemical<br/>Suppressors"]:::suppNode
+        E2["Genetic<br/>Suppressors"]:::suppNode
+        E3["Chemical<br/>Activators"]:::actNode
+        E4["Genetic<br/>Activators"]:::actNode
+    end
+
+    D1 --> E1 & E2
+    D2 --> E3 & E4
+
+    subgraph MODAL["🔬 Step 5: Click Dataset → Detail Modal"]
+        direction TB
+        F1["Dataset Information<br/>Metadata + Compound/PPI Structure"]:::detailNode
+        F2["7 Differential Expression<br/>Visualization Plots"]:::detailNode
+        F3["📥 Download DEG CSV<br/>📥 Download Combined Plot PDF"]:::detailNode
+        F1 --> F2 --> F3
+    end
+
+    E1 & E2 & E3 & E4 --> MODAL
+
+    subgraph PLOTS["📈 Visualization Plots (7)"]
+        direction LR
+        PL1["Count<br/>Bar"]:::plotNode
+        PL2["CDF<br/>Curve"]:::plotNode
+        PL3["Volcano<br/>Plot"]:::plotNode
+        PL4["Manhattan<br/>Plot"]:::plotNode
+        PL5["logFC<br/>Rank"]:::plotNode
+        PL6["Density"]:::plotNode
+        PL7["Lollipop"]:::plotNode
+    end
+
+    F2 --> PLOTS
+
+    %% Styles
+    classDef inputNode fill:#dbeafe,stroke:#3b82f6,stroke-width:2px,color:#1e3a5f,rx:8
+    classDef actionNode fill:#3b82f6,stroke:#1e40af,stroke-width:2px,color:#fff,rx:8,font-weight:bold
+    classDef engineNode fill:#f3e8ff,stroke:#9333ea,stroke-width:2px,color:#4a1d96,rx:8
+    classDef chemNode fill:#d1fae5,stroke:#10b981,stroke-width:2px,color:#064e3b,rx:8
+    classDef geneNode fill:#fef3c7,stroke:#f59e0b,stroke-width:2px,color:#78350f,rx:8
+    classDef suppNode fill:#dbeafe,stroke:#2563eb,stroke-width:2px,color:#1e3a5f,rx:8
+    classDef actNode fill:#fee2e2,stroke:#ef4444,stroke-width:2px,color:#7f1d1d,rx:8
+    classDef detailNode fill:#fce7f3,stroke:#db2777,stroke-width:2px,color:#831843,rx:8
+    classDef plotNode fill:#ccfbf1,stroke:#14b8a6,stroke-width:2px,color:#134e4a,rx:8
+    </div>
+  </div>
+
+  <!-- Legend Cards -->
+  <div class="legend">
+    <div class="legend-card input">
+      <h3>🎯 User Input</h3>
+      <p>Multi-select genes via fuzzy search. Choose perturbation type (All / Chemical only / Genetic only) and set |logFC| cutoff to filter weak signals. Supports custom cutoff values.</p>
+    </div>
+    <div class="legend-card query">
+      <h3>⚙️ Query Engine</h3>
+      <p>Uses precomputed fst columnar signature files + qs gene maps. Reads only target gene columns for speed. Searches all 10 data sources and merges with metadata.</p>
+    </div>
+    <div class="legend-card data">
+      <h3>📦 Data Sources</h3>
+      <p><b>Chemical (4):</b> CIGSData, HerbData, LINCS 2020, LINCS L1000<br><b>Genetic (6):</b> GuoziData, PerturbAtlas, LINCS 2020 KD/KO, LINCS L1000 KD/KO</p>
+    </div>
+    <div class="legend-card result">
+      <h3>📊 Result Tables</h3>
+      <p>Split into <b>Suppressors</b> (effect &lt; 0, ranked by logFC ascending) and <b>Activators</b> (effect &gt; 0, ranked descending). Each further divided by Chemical vs Genetic. Each row has a Download button for full DEG data.</p>
+    </div>
+    <div class="legend-card detail">
+      <h3>🔬 Detail Modal</h3>
+      <p>Click any Dataset to open a modal with: compound 2D/3D structures (chemical) or STRING PPI network (genetic), full metadata, PubChem/UniProt links, and combined DEG visualization plots.</p>
+    </div>
+    <div class="legend-card viz">
+      <h3>📈 7 Visualization Plots</h3>
+      <p><b>Count Bar</b> (Up/Down/NS), <b>CDF Curve</b> (logFC distribution), <b>Volcano</b> (logFC vs -log10 FDR), <b>Manhattan</b> (rank vs -log10 p), <b>Rank Plot</b> (gene vs logFC), <b>Density</b> (logFC density), <b>Lollipop</b> (top 20 genes). Combined via patchwork &amp; downloadable as PDF.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: 'default',
+    flowchart: {
+      useMaxWidth: true,
+      htmlLabels: true,
+      curve: 'basis',
+      padding: 20
+    },
+    themeVariables: {
+      fontFamily: '"Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif'
+    }
+  });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Case Study 1. Exploring the Downstream Transcriptional Consequences of CDK4 Knockout in MCF-7 Cells</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif; background: #f8fafc; color: #1e293b; line-height: 1.75; }
+  .container { max-width: 900px; margin: 0 auto; padding: 32px 20px 50px; }
+  h1 { font-size: 22px; color: #0f172a; letter-spacing: -0.3px; margin-bottom: 4px; line-height: 1.3; }
+  .subtitle { color: #64748b; font-size: 13px; margin-bottom: 20px; }
+  .section { margin: 28px 0; }
+  .section-title { font-size: 17px; color: #0891b2; border-bottom: 2px solid #e2e8f0; padding-bottom: 7px; margin-bottom: 12px; }
+  .card { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 18px 22px; margin: 14px 0; }
+  .card-teal { border-left: 4px solid #0891b2; }
+  .card-green { border-left: 4px solid #22c55e; }
+  .card-amber { border-left: 4px solid #f59e0b; }
+  ul, ol { padding-left: 20px; margin: 4px 0; }
+  li { margin: 3px 0; font-size: 14px; }
+  table { width: 100%; border-collapse: collapse; margin: 10px 0; font-size: 13px; }
+  th { background: #f1f5f9; color: #334155; padding: 7px 10px; text-align: left; font-weight: 600; border-bottom: 2px solid #e2e8f0; font-size: 12px; }
+  td { padding: 7px 10px; border-bottom: 1px solid #f1f5f9; }
+  .badge { display: inline-block; padding: 2px 8px; border-radius: 8px; font-size: 10px; font-weight: 600; margin-right: 3px; }
+  .b-browse { background: #dbeafe; color: #1e40af; }
+  .b-onegene { background: #dcfce7; color: #166534; }
+  .b-synergy { background: #fef3c7; color: #92400e; }
+  .b-gpsa { background: #ede9fe; color: #6d28d9; }
+  .step { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px 22px; margin: 12px 0; }
+  .step-head { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+  .step-num { background: #0891b2; color: #fff; width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; flex-shrink: 0; }
+  .step h3 { font-size: 14px; }
+  .action { background: #ecfeff; border-left: 3px solid #0891b2; padding: 8px 12px; border-radius: 0 5px 5px 0; margin: 6px 0; font-size: 13px; }
+  .action code { background: #cffafe; padding: 1px 5px; border-radius: 3px; font-size: 12px; color: #0e7490; }
+  .result { background: #f0fdf4; border-left: 3px solid #22c55e; padding: 8px 12px; border-radius: 0 5px 5px 0; margin: 6px 0; font-size: 13px; }
+  .result::before { content: "Result: "; font-weight: 700; color: #166534; }
+  .insight { background: #fffbeb; border: 1px solid #fde68a; border-radius: 6px; padding: 10px 14px; margin: 10px 0; font-size: 13px; }
+  .insight::before { content: "> "; font-weight: 700; color: #92400e; }
+  .data-row { display: flex; gap: 12px; flex-wrap: wrap; margin: 8px 0; }
+  .data-cell { flex: 1; min-width: 100px; background: #f8fafc; border-radius: 6px; padding: 10px; text-align: center; border: 1px solid #e2e8f0; }
+  .data-cell .val { font-size: 22px; font-weight: 700; color: #0891b2; }
+  .data-cell .lbl { font-size: 10px; color: #94a3b8; margin-top: 2px; text-transform: uppercase; }
+  .footnote { font-size: 11px; color: #94a3b8; text-align: center; margin-top: 32px; padding-top: 16px; border-top: 1px solid #e2e8f0; }
+  .flow { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 14px; margin: 12px 0; text-align: center; font-size: 13px; }
+  .contrast-table td:first-child { font-weight: 600; }
+  .up { color: #16a34a; font-weight: 600; }
+  .down { color: #dc2626; font-weight: 600; }
+  .neutral { color: #94a3b8; }
+</style>
+</head>
+<body>
+<div class="container">
+
+<h1>Case Study 1. Exploring the Downstream Transcriptional Consequences of CDK4 Knockout in MCF-7 Cells</h1>
+
+<h2>Biological question</h2>
+
+<p>Genetic perturbation experiments are widely used to study how a regulatory gene affects downstream transcriptional programs. A common question is not only whether the perturbed gene itself changes, but also whether its downstream genes and pathways respond in a biologically coherent manner.</p>
+
+<p>In this case study, we use CDK4 knockout in MCF-7 cells as an example to illustrate how PerturbSigDB can help users inspect a curated genetic perturbation signature, validate gene-level responses and interpret pathway-level transcriptional changes.</p>
+
+<p>CDK4 is an important cell-cycle regulator. Therefore, loss of CDK4 activity is expected to affect proliferation-associated genes and cell-cycle-related transcriptional programs. This case asks:</p>
+
+<p><strong>Which downstream genes and pathways are affected by CDK4 knockout in MCF-7 cells, and can these effects be interpreted using curated perturbation signatures in PerturbSigDB?</strong></p>
+
+<h2>Step 1. Locate the CDK4 knockout signature in Browse</h2>
+
+<p>Users can start from the Browse module and switch to the Genetic Perturbagens tab. By entering CDK4 in the gene filter, PerturbSigDB returns curated CDK4 perturbation signatures across available cell-line contexts, perturbation types and source datasets.</p>
+
+<p>Multiple CDK4 perturbation signatures may be returned, including knockout and knockdown experiments from different cell lines and data sources. Users can inspect the cell type, perturbation type and metadata columns to select the desired biological context.</p>
+
+<p>In this example, we selected the CDK4 knockout signature PSG55550 from the MCF-7 cell line.</p>
+
+<div style="margin-top: 12px; text-align: center;">
+  <a href="case1-1.png" target="_blank">
+    <img src="case1-1.png" alt="Click to view full-size image" style="max-width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; cursor: pointer; box-shadow: 0 1px 2px rgba(0,0,0,0.05);">
+  </a>
+</div>
+
+<p>After selecting the dataset, users can click the Dataset link to open the detailed differential expression profile. The detail page provides harmonized metadata, perturbation type, cell-line context, source information, full gene-level differential expression results and interactive visualizations.</p>
+
+<div style="margin-top: 12px; text-align: center;">
+  <a href="case1-2.png" target="_blank">
+    <img src="case1-2.png" alt="Click to view full-size image" style="max-width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; cursor: pointer; box-shadow: 0 1px 2px rgba(0,0,0,0.05);">
+  </a>
+</div>
+
+<p>As expected, CDK4 itself is markedly down-regulated in the selected knockout signature. To further examine whether this perturbation propagates to downstream transcriptional programs, we inspected PCNA (proliferating cell nuclear antigen), a representative proliferation-associated gene involved in DNA replication and cell-cycle progression.</p>
+
+<p>PCNA also shows strong down-regulation in the CDK4 knockout signature. This observation suggests that the selected signature captures not only the reduction of the perturbed gene itself, but also broader downstream transcriptional changes associated with reduced proliferative activity.</p>
+
+<h2>Step 2. Cross-check PCNA suppression using Gene Query</h2>
+
+<p>To examine whether PCNA suppression is reproducibly associated with CDK4 perturbation across the curated database, users can switch to the Gene Query module.</p>
+
+<p>Users enter PCNA in the gene search box, set the |logFC| cutoff to 1.0, select Genetic only as the perturbation type and click Search.</p>
+
+<p>In the Top Suppressors — Genetic table, CDK4 knockout or knockdown signatures can be identified among the genetic perturbations that strongly suppress PCNA expression. In the selected CDK4 loss-of-function signature, PCNA shows a logFC of approximately −5.3, indicating marked transcriptional repression.</p>
+
+<div style="margin-top: 12px; text-align: center;">
+  <a href="case1-3.png" target="_blank">
+    <img src="case1-3.png" alt="Click to view full-size image" style="max-width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; cursor: pointer; box-shadow: 0 1px 2px rgba(0,0,0,0.05);">
+  </a>
+</div>
+
+<p>This reverse query supports the observation from the Browse module. It shows that CDK4 perturbation is associated with strong suppression of PCNA, and illustrates how Gene Query can be used to confirm and extend observations from an individual perturbation profile.</p>
+
+<h2>Step 3. Interpret pathway-level effects using enrichment analysis</h2>
+
+<p>Single-gene responses can be further interpreted at the pathway level. To examine broader transcriptional programs affected by CDK4 knockout, users can return to the selected CDK4 knockout signature PSG55550 in the Browse module and scroll to the Pathway Enrichment Analysis section.</p>
+
+<p>Users click Analysis to prepare the selected perturbation signature for enrichment analysis, select Hallmark as the pathway database and then click Run to perform gene set enrichment analysis.</p>
+
+<div style="margin-top: 12px; text-align: center;">
+  <a href="case1-4.png" target="_blank">
+    <img src="case1-4.png" alt="Click to view full-size image" style="max-width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; cursor: pointer; box-shadow: 0 1px 2px rgba(0,0,0,0.05);">
+  </a>
+</div>
+
+<p>The enrichment dot plot and enrichment bar plot display the top Hallmark gene sets ranked by normalized enrichment score. In this example, several proliferation- and growth-associated gene sets show negative enrichment scores. The E2F Targets pathway is among the most strongly suppressed signatures, and additional programs such as G2M Checkpoint and MYC Targets are also down-regulated.</p>
+
+<div style="margin-top: 12px; text-align: center;">
+  <a href="case1-5.png" target="_blank">
+    <img src="case1-5.png" alt="Click to view full-size image" style="max-width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; cursor: pointer; box-shadow: 0 1px 2px rgba(0,0,0,0.05);">
+  </a>
+</div>
+
+<p>These pathway-level results are consistent with the gene-level observations from both the detailed differential expression profile and the Gene Query module.</p>
+
+<div style="margin-top: 12px; text-align: center;">
+  <a href="case1-6.png" target="_blank">
+    <img src="case1-6.png" alt="Click to view full-size image" style="max-width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; cursor: pointer; box-shadow: 0 1px 2px rgba(0,0,0,0.05);">
+  </a>
+</div>
+
+<p>From a biological perspective, this pattern is coherent with the CDK4–RB–E2F regulatory axis. CDK4 activity promotes RB phosphorylation, which facilitates E2F-dependent transcription. When CDK4 is lost, E2F-associated transcriptional activity is reduced, leading to decreased expression of downstream proliferation-related genes such as PCNA and coordinated suppression of cell-cycle-associated transcriptional programs.</p>
+
+<p>In contrast, stress-associated programs, including TNFα/NF-κB signaling, Apoptosis and Hypoxia, may show positive enrichment. These signals may reflect secondary cellular responses following CDK4 perturbation.</p>
+
+<h2>Interpretation</h2>
+
+<p>This case demonstrates how PerturbSigDB supports multi-level interpretation of a genetic perturbation signature. Starting from a curated CDK4 knockout entry in MCF-7 cells, users can inspect the full differential expression profile in Browse, identify downstream response genes such as PCNA, confirm gene-level changes using Gene Query and interpret broader pathway-level effects through enrichment analysis.</p>
+
+<p>More generally, this workflow illustrates how PerturbSigDB helps users move from a single genetic perturbation to biologically interpretable transcriptional programs. Instead of only browsing a perturbation record, users can connect the perturbed gene, downstream response genes and pathway-level effects within a unified perturbation signature knowledgebase.</p>
+
+<h2>Notes</h2>
+
+<p>The results should be interpreted as transcriptomic evidence derived from curated perturbation signatures. Down-regulation of PCNA and suppression of E2F-related pathways are consistent with the known biological role of CDK4 in cell-cycle regulation, but the results do not by themselves establish direct regulation of every affected gene or pathway by CDK4. Users are encouraged to combine PerturbSigDB results with pathway knowledge, literature evidence and independent experimental validation.</p>
+
+
+</body>
+</html>
